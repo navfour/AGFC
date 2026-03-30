@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: samplepaper-agfc.aux
+The style file: splncs04.bst
+Database file #1: cas-refs.bib
+Warning--can't use both volume and number fields in chen2018modeling
+Warning--can't use both volume and number fields in li2021spatial
+Warning--can't use both volume and number fields in oreshkin2021fc
+Warning--can't use both volume and number fields in zhou2021informer
+You've used 30 entries,
+            2850 wiz_defined-function locations,
+            764 strings with 11415 characters,
+and the built_in function-call counts, 19845 in all, are:
+= -- 1606
+> -- 770
+< -- 38
++ -- 318
+- -- 284
+* -- 1300
+:= -- 2513
+add.period$ -- 39
+call.type$ -- 30
+change.case$ -- 254
+chr.to.int$ -- 0
+cite$ -- 34
+duplicate$ -- 1702
+empty$ -- 1636
+format.name$ -- 314
+if$ -- 4291
+int.to.chr$ -- 0
+int.to.str$ -- 30
+missing$ -- 362
+newline$ -- 96
+num.names$ -- 60
+pop$ -- 705
+preamble$ -- 1
+purify$ -- 202
+quote$ -- 0
+skip$ -- 552
+stack$ -- 0
+substring$ -- 1061
+swap$ -- 1009
+text.length$ -- 38
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 120
+warning$ -- 4
+while$ -- 144
+width$ -- 32
+write$ -- 300
+(There were 4 warnings)
