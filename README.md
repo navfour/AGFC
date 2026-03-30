@@ -32,9 +32,9 @@ Core modules:
 - FC-GAGA backbone and graph operators (GCN/GAT/GraphSAGE): `dynamic/dynamic_model_snapshot.py`
 - Data split and sample generation: `dynamic/dynamic_generate_training_data.py`
 
-## 3. Framework Figure (Migrated from Temporary Paper Folder)
+## 3. Framework Figure
 
-To avoid broken links after deleting `newlatex/`, all README assets are copied to `docs/readme_assets/`.
+Framework overview:
 
 ![AG-FC framework](docs/readme_assets/agfc_framework.png)
 
@@ -136,9 +136,9 @@ Each run creates an experiment folder under `dynamic_results0130/`. Typical arti
 
 A run index is appended to `dynamic_results0130/results_index.csv`.
 
-## 9. Paper Result Snapshots (README-Ready)
+## 9. Paper Result Snapshots
 
-To keep README data self-contained after deleting temporary LaTeX folders, summary files are copied to:
+Summary files used in this README:
 
 - `docs/readme_assets/paper_result_summary.csv`
 - `docs/readme_assets/paper_main_table_top1_by_model.csv`
@@ -158,7 +158,7 @@ Main table top-1 counts (Table 5 aggregate):
 
 GraphSAGE is the most stable graph operator in ablation (Top-1: 16/24, Top-3: 52/72).
 
-## 10. Additional Figures (Migrated)
+## 10. Additional Figures
 
 Subfield 1702 five-year trend visualization:
 

@@ -1,0 +1,9 @@
+model,top1_count_in_table5
+AG-FC,12
+SARIMAX,8
+FC-GAGA,3
+LSTM,1
+FC-GAGA_without_graph_gate,0
+NeuralProphet,0
+Informer,0
+TimeX++,0

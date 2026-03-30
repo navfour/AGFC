@@ -1,0 +1,9 @@
+metric,description,value
+overall_top1_count,AG-FC overall top-1 wins across all metric-dataset evaluations,12/24
+subfield_top1_count,AG-FC top-1 wins on subfield-level datasets,11/12
+wins_vs_fcgaga,AG-FC wins versus FC-GAGA,20/24
+wins_vs_fcgaga_without_gate,AG-FC wins versus FC-GAGA (without graph gate),21/24
+adaptive_only_svd_avg_mae_gain,Average MAE gain from SVD in adaptive-only mode,6.48%
+hybrid_svd_avg_mae_gain,Average MAE gain from SVD in hybrid mode,19.10%
+graphsage_top1_count,GraphSAGE top-1 wins in graph-operator study,16/24
+graphsage_top3_count,GraphSAGE top-3 appearances in graph-operator study,52/72
