@@ -1,83 +1,84 @@
 # AG-FC: Adaptive Graph Forecasting for Scientific Topic Popularity
 
-基于论文 *Learning Adaptive Graphs to Uncover Potential Relationships for Scientific Topic Popularity Trend Forecasting* 的代码实现与实验复现仓库。  
-核心入口脚本为 `dynamic_run_snapshot.py`，用于在多种图建模模式下训练/评估 AG-FC（Adaptive Graph Fully Connected）模型。
+This repository contains the implementation and experiment pipeline for the paper *Learning Adaptive Graphs to Uncover Potential Relationships for Scientific Topic Popularity Trend Forecasting*.  
+The main entry point is `dynamic_run_snapshot.py`.
 
-## 1. 项目目标
+## 1. Objective
 
-本项目将“科研主题热度预测”建模为**图结构感知的多变量时间序列预测**任务：
+This project formulates scientific topic popularity forecasting as a **graph-aware multivariate time-series forecasting** task:
 
-- 节点：主题或子领域（取决于数据集粒度）
-- 时间：年度 publication volume（1975--2024）
-- 预测：给定历史窗口，预测未来 `H` 步（论文主实验为 `H=1`）
+- Nodes: topics or subfields (depending on dataset granularity)
+- Time axis: yearly publication volume (1975--2024)
+- Target: predict future `H` steps from a historical window (`H=1` in the paper's main setting)
 
-论文中的关键结论：
+Key findings reported in the paper:
 
-- AG-FC 在主实验中获得 **12/24** 项 Top-1。
-- 在更细粒度 subfield 数据上，AG-FC 获得 **11/12** 项 Top-1。
-- 相比 FC-GAGA 与 FC-GAGA（without graph gate），AG-FC 分别在 **20/24**、**21/24** 设置上更优。
+- AG-FC achieves **12/24** top-1 results in the main benchmark.
+- On subfield-level datasets, AG-FC achieves **11/12** top-1 results.
+- AG-FC outperforms FC-GAGA and FC-GAGA (without graph gate) in **20/24** and **21/24** settings, respectively.
 
-## 2. 方法与代码对应
+## 2. Method-to-Code Mapping
 
-`dynamic_run_snapshot.py` 支持四种图模式（`--graph_mode`）：
+`dynamic_run_snapshot.py` exposes three graph modes (`--graph_mode`):
 
-- `independent`：不使用图结构（节点独立建模）
-- `basegraph`：仅使用基图（由时间窗口内快照融合）
-- `adaptiveonly`：仅使用自适应图（从可学习节点嵌入构建）
-- `hybrid`：融合基图与自适应图（支持 SVD 初始化）
+- `basegraph`: use only base graphs (fused from sliding-window snapshots)
+- `adaptiveonly`: use only adaptive graphs (learned from node embeddings)
+- `hybrid`: fuse base graph and adaptive graph (supports SVD initialization)
 
-与论文方法设计的代码映射如下：
+Core modules:
 
-- 动态快照图与滑窗融合：`dynamic/dynamic_graph_provider.py`
-- 自适应邻接学习与 hybrid 融合：`dynamic/dynamic_adaptive_layers.py`
-- FC-GAGA 主干与图算子（GCN/GAT/GraphSAGE）：`dynamic/dynamic_model_snapshot.py`
-- 数据切分与样本构造：`dynamic/dynamic_generate_training_data.py`
+- Dynamic snapshot loading and window fusion: `dynamic/dynamic_graph_provider.py`
+- Adaptive adjacency learning and hybrid fusion: `dynamic/dynamic_adaptive_layers.py`
+- FC-GAGA backbone and graph operators (GCN/GAT/GraphSAGE): `dynamic/dynamic_model_snapshot.py`
+- Data split and sample generation: `dynamic/dynamic_generate_training_data.py`
 
-## 3. 框架图（已迁移到非临时目录）
+## 3. Framework Figure (Migrated from Temporary Paper Folder)
 
-> 为避免 `newlatex/` 删除后 README 失效，所有 README 用图已复制到 `docs/readme_assets/`。
+To avoid broken links after deleting `newlatex/`, all README assets are copied to `docs/readme_assets/`.
 
 ![AG-FC framework](docs/readme_assets/agfc_framework.png)
 
-## 4. 数据组织
+## 4. Data Organization
 
-当前仓库内置 8 个 OpenAlex 子集（4 个 domain + 4 个 subfield）：
+The repository currently includes 8 OpenAlex subsets (4 domains + 4 subfields):
 
 - `data/oa_1`, `data/oa_2`, `data/oa_3`, `data/oa_4`
 - `data/oa_1702`, `data/oa_1705`, `data/oa_1707`, `data/oa_1710`
 
-每个子集目录包含：
+Each subset contains:
 
-- `*_covert.csv`：节点年度时间序列（行是年份，列是节点）
-- `*_coo_pkl/`：每年的共现邻接矩阵快照（`{subset}_cooccur_{year}.pkl`）
-- `*_coo/`：对应 Excel 版本（分析用）
+- `*_covert.csv`: yearly node time series (rows = years, columns = nodes)
+- `*_coo_pkl/`: yearly co-occurrence adjacency snapshots (`{subset}_cooccur_{year}.pkl`)
+- `*_coo/`: Excel versions for analysis
 
-默认参数使用 `oa_2`。
+Default script arguments are set to `oa_2`.
 
-## 5. 环境依赖
+## 5. Environment
 
-建议使用 `Python 3.10/3.11`（避免环境架构混装问题），核心依赖：
+Recommended Python: `3.10` or `3.11`.
+
+Core dependencies:
 
 - `tensorflow`
 - `numpy`
 - `pandas`
 - `gdown`
 
-可参考：
+Example installation:
 
 ```bash
 pip install tensorflow numpy pandas gdown
 ```
 
-## 6. 快速开始
+## 6. Quick Start
 
-### 6.1 默认运行（oa_2）
+### 6.1 Default run (oa_2)
 
 ```bash
 python dynamic_run_snapshot.py
 ```
 
-### 6.2 复现实验常用配置：Adaptive Only（无 SVD）
+### 6.2 Common reproduction setting: Adaptive Only (without SVD)
 
 ```bash
 python dynamic_run_snapshot.py \
@@ -91,7 +92,7 @@ python dynamic_run_snapshot.py \
   --horizon 1
 ```
 
-### 6.3 Hybrid + SVD（兼顾精度与先验一致性）
+### 6.3 Hybrid + SVD (accuracy + prior consistency)
 
 ```bash
 python dynamic_run_snapshot.py \
@@ -106,43 +107,43 @@ python dynamic_run_snapshot.py \
   --horizon 1
 ```
 
-## 7. 常用参数
+## 7. Key Arguments
 
-| 参数 | 说明 | 典型值 |
+| Argument | Description | Typical values |
 |---|---|---|
-| `--graph_mode` | 图建模模式 | `independent` / `basegraph` / `adaptiveonly` / `hybrid` |
-| `--adjacency_fusion` | 基图快照融合方式 | `last` / `sum` / `mean` / `learned_decay` |
-| `--adaptive_init` | 自适应图初始化方式 | `last` / `sum` / `mean` / `random` |
-| `--graph_layer_type` | 图编码器类型 | `none` / `gcn` / `gat` / `graphsage` |
-| `--history_length` | 历史窗口长度 | 默认 `5` |
-| `--horizon` | 预测步长 | 默认 `1` |
-| `--apt_size` | 自适应邻接低秩维度 | 默认来自超参配置（常用 `10`） |
-| `--use_time_gate` | 是否启用时间门控 | 默认关闭 |
+| `--graph_mode` | Graph modeling mode | `basegraph` / `adaptiveonly` / `hybrid` |
+| `--adjacency_fusion` | Base-graph snapshot fusion strategy | `last` / `sum` / `mean` / `learned_decay` |
+| `--adaptive_init` | Adaptive graph initialization | `last` / `sum` / `mean` / `random` |
+| `--graph_layer_type` | Graph encoder type | `none` / `gcn` / `gat` / `graphsage` |
+| `--history_length` | Historical look-back window | default `5` |
+| `--horizon` | Forecast horizon | default `1` |
+| `--apt_size` | Low-rank size for adaptive adjacency | typically `10` |
+| `--use_time_gate` | Enable temporal gate | disabled by default |
 
-## 8. 输出结果
+## 8. Outputs
 
-每次运行会在 `dynamic_results0130/` 下创建单独实验目录，典型产物包括：
+Each run creates an experiment folder under `dynamic_results0130/`. Typical artifacts:
 
-- `config.json`：运行参数与超参
-- `metrics.json`：总体指标与分 horizon 指标
-- `prediction_by_node_year.csv`：逐节点逐年份预测
-- `node_error_summary.csv`：节点级误差统计
-- `y_true.npy` / `y_pred.npy`：标签与预测张量
-- `adaptive_adj.npy` / `adaptive_adj_pure.npy`：融合图与纯自适应图（使用 adaptive 模式时）
-- `base_graph.npy` / `base_graph_raw.npy`：基图（hybrid/base 模式相关）
-- `best_weights.weights.h5`：最佳权重
-- `dynamic_saved_model/`：导出模型
+- `config.json`: CLI args + hyperparameters
+- `metrics.json`: overall and per-horizon metrics
+- `prediction_by_node_year.csv`: per-node, per-year predictions
+- `node_error_summary.csv`: node-level error summary
+- `y_true.npy` / `y_pred.npy`: labels and predictions
+- `adaptive_adj.npy` / `adaptive_adj_pure.npy`: fused and pure adaptive adjacency (adaptive modes)
+- `base_graph.npy` / `base_graph_raw.npy`: base graph artifacts (base/hybrid modes)
+- `best_weights.weights.h5`: best checkpoint weights
+- `dynamic_saved_model/`: exported SavedModel
 
-同时会在 `dynamic_results0130/results_index.csv` 中追加本次实验索引。
+A run index is appended to `dynamic_results0130/results_index.csv`.
 
-## 9. 论文结果摘要（README 可追踪数据）
+## 9. Paper Result Snapshots (README-Ready)
 
-为避免依赖临时论文目录，以下摘要数据已固化到：
+To keep README data self-contained after deleting temporary LaTeX folders, summary files are copied to:
 
 - `docs/readme_assets/paper_result_summary.csv`
 - `docs/readme_assets/paper_main_table_top1_by_model.csv`
 
-主实验 Top-1 统计（Table 5 汇总）：
+Main table top-1 counts (Table 5 aggregate):
 
 | Model | Top-1 Count |
 |---|---:|
@@ -155,24 +156,23 @@ python dynamic_run_snapshot.py \
 | Informer | 0 |
 | TimeX++ | 0 |
 
-此外，GraphSAGE 在图算子消融中表现最稳健（Top-1: 16/24，Top-3: 52/72）。
+GraphSAGE is the most stable graph operator in ablation (Top-1: 16/24, Top-3: 52/72).
 
-## 10. 结果示意图（已迁移）
+## 10. Additional Figures (Migrated)
 
-Subfield 1702 五年趋势预测示意：
+Subfield 1702 five-year trend visualization:
 
 ![Forecast trend oa1702](docs/readme_assets/forecast_trend_oa1702.png)
 
-Subfield 1702 拓扑转变（base → adaptive → fused）：
+Subfield 1702 topology transition (base → adaptive → fused):
 
 ![Topology transition oa1702](docs/readme_assets/topology_transition_oa1702.png)
 
-## 11. 引用
+## 11. Citation
 
-如果本仓库对你的研究有帮助，请引用对应论文：
+If this repository helps your research, please cite:
 
 ```text
 Learning Adaptive Graphs to Uncover Potential Relationships for Scientific Topic Popularity Trend Forecasting
 Changwang Li, Xuecan Tian, Zeyu Deng, Jin Mao
 ```
-
